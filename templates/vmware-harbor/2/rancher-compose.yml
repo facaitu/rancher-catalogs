@@ -1,7 +1,7 @@
 version: '2'
 .catalog:
   name: Harbor
-  version: 0.5.0-distributed-rev0
+  version: 0.5.1-singlehost-rev0
   description: |
     Enterprise Class Container Registry by VMware
   minimum_rancher_version: v0.59.0
@@ -20,37 +20,29 @@ version: '2'
       default: Vmware123!
       required: true
       type: "string"
-    - variable: "traefikdomain"
-      description: "Harbor domain name (if you are using Traefik you should call out the domain here and the harbor host name should just represent the hostname)"
-      label: "(Traefik) domain:"
+    - variable: "harborhostlabel"
+      label: "Harbor will be deployed on the host with this label (default: harbor-host=true)"
+      description: |
+        Harbor host label
+      default: harbor-host=true
       required: true
-      default: mycompany.com
-      type: "string"
-    - variable: "volumedriver"
-      description: "Volume Driver being used (default: rancher-nfs)"
-      label: "Volume Driver:"
-      required: true
-      default: rancher-nfs
       type: "string"
 services:
   registry:
     scale: 1
+    start_on_create: false
   proxy:
     scale: 1
-    health_check:
-      healthy_threshold: 2
-      response_timeout: 2000
-      port: 80
-      unhealthy_threshold: 3
-      initializing_timeout: 60000
-      interval: 2000
-      strategy: recreate
-      request_line:
+    start_on_create: false
   jobservice:
     scale: 1
+    start_on_create: false
   ui:
     scale: 1
+    start_on_create: false
   mysql:
     scale: 1
+    start_on_create: false
   harbor-setupwrapper:
     scale: 1
+    start_on_create: true
