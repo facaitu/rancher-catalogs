@@ -6,6 +6,7 @@ services:
     environment:
       - HARBORHOSTNAME=${harborhostname}
       - HARBOR_ADMIN_PASSWORD=${harbor_admin_password}
+      - DB_PASSWORD=${harbor_db_password}
     volumes:
       - /etc/registry
       - /etc/ui
@@ -22,7 +23,7 @@ services:
       io.rancher.container.start_once: 'true'
       io.rancher.sidekicks: registry, ui, jobservice, mysql, proxy
   log:
-    image: vmware/harbor-log:0.5.0
+    image: vmware/harbor-log:v1.1.1
     container_name: harbor-log
     restart: always
     volumes:
@@ -44,6 +45,8 @@ services:
       - harbor-setupwrapper
     environment:
       - GODEBUG=netdns=cgo
+    ports:
+      - 8081:80/tcp 
     command:
       ["serve", "/etc/registry/config.yml"]
     depends_on:
@@ -91,6 +94,8 @@ services:
       - /data:/harbor_storage
     volumes_from:
       - harbor-setupwrapper
+    ports:
+      - 8082:80/tcp      
     depends_on:
       - log
     logging:
