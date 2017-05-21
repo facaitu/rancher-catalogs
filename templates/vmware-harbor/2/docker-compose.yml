@@ -48,7 +48,7 @@ services:
     command:
       ["serve", "/etc/registry/config.yml"]
     ports:
-      - 8081:80/tcp 
+      - 8081:5000/tcp 
     depends_on:
       - log
     logging:
@@ -126,10 +126,10 @@ services:
       - harbor-setupwrapper
     depends_on:
       - log
-    #external_links:
-    #  - registry
-    #  - ui
-    #  - mysql
+    external_links:
+      - registry
+      - ui
+      - mysql
     logging:
       driver: "syslog"
       options:
